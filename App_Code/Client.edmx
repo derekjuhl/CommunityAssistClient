@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CommunityAssistModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="CommunityAssistModelStoreContainer">
+          <EntitySet Name="vw_services" EntityType="CommunityAssistModel.Store.vw_services" store:Type="Views" store:Schema="Client" store:Name="vw_services">
+            <DefiningQuery>SELECT 
+      [vw_services].[ServiceKey] AS [ServiceKey], 
+      [vw_services].[ServiceName] AS [ServiceName], 
+      [vw_services].[ServiceDescription] AS [ServiceDescription]
+      FROM [Client].[vw_services] AS [vw_services]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'CommunityAssist.Client.vw_services' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="vw_services">
+          <Key>
+            <PropertyRef Name="ServiceKey" />
+          </Key>
+          <Property Name="ServiceKey" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="nvarchar" MaxLength="255" />
+          <Property Name="ServiceDescription" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Function Name="usp_Register" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="Client">
+          <Parameter Name="lastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
+          <Parameter Name="userName" Type="nvarchar" Mode="In" />
+          <Parameter Name="password" Type="nvarchar" Mode="In" />
+          <Parameter Name="email" Type="nvarchar" Mode="In" />
+          <Parameter Name="HomePhone" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspGetGrants" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="Client">
+          <Parameter Name="PersonKey" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="Client">
+          <Parameter Name="userName" Type="nvarchar" Mode="In" />
+          <Parameter Name="userPassword" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspNewGrant" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="Client">
+          <Parameter Name="GrantAmount" Type="money" Mode="In" />
+          <Parameter Name="ServiceKey" Type="int" Mode="In" />
+          <Parameter Name="PersonKey" Type="int" Mode="In" />
+        </Function>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CommunityAssistModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CommunityAssistEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="vw_services" EntityType="CommunityAssistModel.vw_services" />
+          <FunctionImport Name="usp_Register">
+            <Parameter Name="lastName" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="userName" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+            <Parameter Name="email" Mode="In" Type="String" />
+            <Parameter Name="HomePhone" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetGrants" ReturnType="Collection(CommunityAssistModel.uspGetGrants_Result)">
+            <Parameter Name="PersonKey" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspLogin" ReturnType="Collection(Int32)">
+            <Parameter Name="userName" Mode="In" Type="String" />
+            <Parameter Name="userPassword" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspNewGrant">
+            <Parameter Name="GrantAmount" Mode="In" Type="Decimal" />
+            <Parameter Name="ServiceKey" Mode="In" Type="Int32" />
+            <Parameter Name="PersonKey" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="vw_services">
+          <Key>
+            <PropertyRef Name="ServiceKey" />
+          </Key>
+          <Property Name="ServiceKey" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ServiceDescription" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <ComplexType Name="uspGetGrants_Result">
+          <Property Type="DateTime" Name="GrantDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="GrantAmount" Nullable="true" Precision="19" />
+          <Property Type="String" Name="Servicename" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="GrantDateApproved" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CommunityAssistModelStoreContainer" CdmEntityContainer="CommunityAssistEntities">
+          <EntitySetMapping Name="vw_services">
+            <EntityTypeMapping TypeName="CommunityAssistModel.vw_services">
+              <MappingFragment StoreEntitySet="vw_services">
+                <ScalarProperty Name="ServiceKey" ColumnName="ServiceKey" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="ServiceDescription" ColumnName="ServiceDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_Register" FunctionName="CommunityAssistModel.Store.usp_Register" />
+          <FunctionImportMapping FunctionImportName="uspGetGrants" FunctionName="CommunityAssistModel.Store.uspGetGrants">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CommunityAssistModel.uspGetGrants_Result">
+                <ScalarProperty Name="GrantDate" ColumnName="GrantDate" />
+                <ScalarProperty Name="GrantAmount" ColumnName="GrantAmount" />
+                <ScalarProperty Name="Servicename" ColumnName="Servicename" />
+                <ScalarProperty Name="GrantDateApproved" ColumnName="GrantDateApproved" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspLogin" FunctionName="CommunityAssistModel.Store.uspLogin" />
+          <FunctionImportMapping FunctionImportName="uspNewGrant" FunctionName="CommunityAssistModel.Store.uspNewGrant" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
